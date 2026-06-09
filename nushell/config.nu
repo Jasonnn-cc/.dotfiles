@@ -34,3 +34,12 @@ def mvln [src: path, dest: path, ...rest] {
 	mv $src $dest
 	ln -s $target_dest $src ...$rest
 }
+
+# Makes a temporary file and returns it's path, pipe input to fill it's contents
+def as-tmp [] {
+  const tmp_path = ($nu.temp-dir | path join nu/)
+  mkdir tmp_path
+  let tmp = mktemp --tmpdir-path tmp_path XXXXXXXX
+  $in | save -f $tmp
+  $tmp
+}
