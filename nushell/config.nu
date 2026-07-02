@@ -7,11 +7,28 @@ $env.EDITOR = "nvim"
 
 # |=< NUSHELL COMPLETION >============|
 
-$env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense'
-mkdir $"($nu.cache-dir)"
-carapace _carapace nushell | save --force $"($nu.cache-dir)/carapace.nu"
+let fish_completer = {|spans|
+  fish --command $"complete '--do-complete=($spans | str replace --all "'" "\\'" | str join ' ')'"
+  | from tsv --flexible --noheaders --no-infer
+  | rename value description
+  | update value {|row|
+    let value = $row.value
+    let need_quote = ['\' ',' '[' ']' '(' ')' ' ' '\t' "'" '"' "`"] | any {$in in $value}
+    if ($need_quote and ($value | path exists)) {
+      let expanded_path = if ($value starts-with ~) {$value | path expand --no-symlink} else {$value}
+      $'"($expanded_path | str replace --all "\"" "\\\"")"'
+    } else {$value}
+  }
+}
 
-source $"($nu.cache-dir)/carapace.nu"
+$env.config = {
+  completions: {
+    external: {
+      enable: true
+      completer: $fish_completer
+    }
+  }
+}
 
 # |=< ALIASES >=======================|
 
