@@ -1,0 +1,10 @@
+# Setup editors :3
+export VISUAL=nvim
+export EDITOR=nvim
+
+# Setup go dirs
+export GOPATH="$HOME/go"
+export GOMODCACHE="$HOME/.cache/go-mod"
+
+# Setup PATH
+export PATH="$PATH:$GOPATH/bin"

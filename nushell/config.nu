@@ -4,9 +4,6 @@ use std/config env-conversions
 
 $env.config.show_banner = false
 
-$env.VISUAL = "nvim"
-$env.EDITOR = "nvim"
-
 # |=< NUSHELL COMPLETION >============|
 
 let fish_completer = {|spans|
