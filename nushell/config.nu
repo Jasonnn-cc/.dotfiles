@@ -1,4 +1,4 @@
-# |=< ENVIRONMENT VARIABLES >=========|
+# |=< CONFIGURATION >=================|
 
 $env.config.show_banner = false
 
@@ -37,26 +37,35 @@ alias sudo = sudo-rs
 alias l = ls
 alias cl = clear
 
-# |=< KEYBINDS >======================|
+# |=< CONSTANTS >=====================|
+
+const TMP_DIR = $nu.temp-dir | path join "nu/"
 
 # |=< CUSTOM COMMANDS >===============|
 
 # Move a file or directory to a destination leaving behind a symlink
 def mvln [src: path, dest: path, ...rest] {
-	mut target_dest = $dest | path expand
+  if not ($src | path exists) {
+    error make {msg: $"Source does not exist: ($src)"}
+  }
+
+  mut target_dest = ($dest | path expand)
   if ($dest | path type) == "dir" {
     $target_dest = $target_dest | path join ($src | path basename)
   }
-  
-	mv $src $dest
-	ln -s $target_dest $src ...$rest
+
+  mv $src $target_dest
+  ln -s ...$rest $target_dest ( $src | str trim -c '/' )
 }
 
-# Makes a temporary file and returns it's path, pipe input to fill it's contents
+# Makes a temporary file in /tmp/nu/ and returns it's path, pipe input to fill it's contents
 def as-tmp [] {
-  const tmp_path = ($nu.temp-dir | path join nu/)
-  mkdir tmp_path
-  let tmp = mktemp --tmpdir-path tmp_path XXXXXXXX
-  $in | save -f $tmp
+  let content = $in
+  mkdir $TMP_DIR
+
+  let tmp = mktemp --tmpdir-path $TMP_DIR XXXXXXXX
+  if ($content != null) {
+    $content | save -f $tmp
+  }
   $tmp
 }
