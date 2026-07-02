@@ -59,7 +59,9 @@ const TMP_DIR = $nu.temp-dir | path join "nu/"
 # |=< CUSTOM COMMANDS >===============|
 
 # Move a file or directory to a destination leaving behind a symlink
-def mvln [src: path, dest: path, ...rest] {
+@example "Move and link the nushell config folder to a dotfiles repo" {mvln ~/.config/nushell/ ~/.dotfiles}
+@example "Give the moved file a name" {mvln ~/.zshrc ~/.dotfiles/zshrc}
+def mvln [src: path, dest: path]: nothing -> nothing {
   if not ($src | path exists) {
     error make {msg: $"Source does not exist: ($src)"}
   }
@@ -70,10 +72,12 @@ def mvln [src: path, dest: path, ...rest] {
   }
 
   mv $src $target_dest
-  ln -s ...$rest $target_dest ( $src | str trim -c '/' )
+  ln -s $target_dest ( $src | str trim -c '/' )
 }
 
-# Makes a temporary file in /tmp/nu/ and returns it's path, pipe input to fill it's contents
+# Makes a temporary file in /tmp/nu/ and returns it's path, pipe input to fill it's contents.
+@example "Diff the output of two commands" {diff (ls | to text | as-tmp) (ls .. | to text | as-tmp)}
+@example "Edit all files that contain 'fox' as a quickfix" {nvim -q (rg fox --vimgrep | as-tmp)}
 def as-tmp [] {
   let content = $in
   mkdir $TMP_DIR
