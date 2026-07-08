@@ -47,7 +47,6 @@ $env.config.hooks.env_change.PWD ++= [{||
 
 # |=< ALIASES >=======================|
 
-alias shutdown = systemctl poweroff
 alias sudo = sudo-rs
 alias l = ls
 alias cl = clear
@@ -57,6 +56,16 @@ alias cl = clear
 const TMP_DIR = $nu.temp-dir | path join "nu/"
 
 # |=< CUSTOM COMMANDS >===============|
+
+# Stops the graphical session and powers the system off
+@example "Shutdown the system... sometimes" {if (random bool --bias (1 / 6)) {shutdown}}
+def shutdown [] {
+  uwsm stop
+  systemctl poweroff
+}
+
+# Stops the graphical session
+def logout [] { uwsm stop }
 
 # Move a file or directory to a destination leaving behind a symlink
 @example "Move and link the nushell config folder to a dotfiles repo" {mvln ~/.config/nushell/ ~/.dotfiles}
