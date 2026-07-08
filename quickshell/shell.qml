@@ -18,8 +18,7 @@ Scope {
                 TopBarSeparator {},
                 ProcessWidget {
                     width: 628
-                },
-                TopBarSeparator {}
+                }
             ]
             center: [
                 TopBarSeparator {},
@@ -31,8 +30,6 @@ Scope {
                 TopBarSeparator {}
             ]
             right: [
-                TopBarSeparator {},
-                TrayWidget {},
                 TopBarSeparator {},
                 BatteryWidget {}
             ]
