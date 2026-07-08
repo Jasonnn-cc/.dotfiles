@@ -3,8 +3,11 @@ export VISUAL=nvim
 export EDITOR=nvim
 
 # Setup go dirs
-export GOPATH="$HOME/go"
+export GOPATH="$HOME/.local/share/go"
 export GOMODCACHE="$HOME/.cache/go-mod"
 
+export CARGO_BIN="$HOME/.cargo/bin"
+
 # Setup PATH
-export PATH="$PATH:$GOPATH/bin"
+export PATH="$PATH:$GOPATH/bin:$CARGO_BIN"
+
