@@ -83,8 +83,8 @@ def mvln [src: path, dest: path]: nothing -> nothing {
 
 # Makes a temporary file in /tmp/nu/ and returns it's path, pipe input to fill it's contents.
 @example "Diff the output of two commands" {diff (ls | to text | as-tmp) (ls .. | to text | as-tmp)}
-@example "Edit all files that contain 'fox' as a quickfix" {nvim -q (rg fox --vimgrep | as-tmp)}
-def as-tmp [] {
+@example "Edit all files that contain 'fox' as a quickfix" {rg fox --vimgrep | as-tmp | nvim -q $in}
+def as-tmp []: any -> path {
   let content = $in
   mkdir $TMP_DIR
 
