@@ -68,7 +68,8 @@ def shutdown []: nothing -> nothing {
 @example "Give the moved file a name" {mvln ~/.zshrc ~/.dotfiles/zshrc}
 def mvln [src: path, dest: path]: nothing -> nothing {
   if not ($src | path exists) {
-    error make {msg: $"Source does not exist: ($src)"}
+    let span = (metadata $src).span
+    error make {msg: $"Source does not exist: ($src)", label: {text: "path here", span: $span}}
   }
 
   mut target_dest = ($dest | path expand)
