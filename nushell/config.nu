@@ -50,6 +50,7 @@ $env.config.hooks.env_change.PWD ++= [{||
 alias sudo = sudo-rs
 alias l = ls
 alias cl = clear
+alias gg = ginkgo
 
 # |=< CONSTANTS >=====================|
 
