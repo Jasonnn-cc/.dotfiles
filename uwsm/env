@@ -11,3 +11,5 @@ export CARGO_BIN="$HOME/.cargo/bin"
 # Setup PATH
 export PATH="$PATH:$GOPATH/bin:$CARGO_BIN"
 
+# Load secrets if exists
+[ -f ~/.config/uwsm/env.secret ] && . ~/.config/uwsm/env.secret
