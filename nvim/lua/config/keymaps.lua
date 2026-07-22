@@ -4,6 +4,7 @@
 
 local wk = require("which-key")
 wk.add({ "<Leader>y", icon = "󰅌", group = "yank" })
+wk.add({ "<Leader>y", mode = "v", icon = "󰅌", group = "yank" })
 
 vim.keymap.set("n", "<Leader>y<C-g>", function()
   local path = vim.fn.expand("%:p")
