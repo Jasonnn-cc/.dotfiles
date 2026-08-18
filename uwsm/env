@@ -5,11 +5,17 @@ export EDITOR=nvim
 # Setup go dirs
 export GOPATH="$HOME/.local/share/go"
 export GOMODCACHE="$HOME/.cache/go-mod"
+export GOBIN="$GOPATH/bin"
 
+# Setup rust dirs
 export CARGO_BIN="$HOME/.cargo/bin"
 
+# Setup ts pmo ictl dirs
+export PNPM_HOME="$HOME/.local/share/pnpm"
+export PNPM_BIN="$PNPM_HOME/bin"
+
 # Setup PATH
-export PATH="$PATH:$GOPATH/bin:$CARGO_BIN"
+export PATH="$PATH:$CARGO_BIN:$GOBIN:$PNPM_BIN"
 
 # Load secrets if exists
 [ -f ~/.config/uwsm/env.secret ] && . ~/.config/uwsm/env.secret
