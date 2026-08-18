@@ -1,0 +1,13 @@
+gui:
+  spinner:
+    frames:
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+      - ""
+    rate: 80
+git:
+  overrideGpg: true
+
