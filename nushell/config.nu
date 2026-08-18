@@ -1,4 +1,4 @@
-use std/config env-conversions 
+use std/config env-conversions
 
 # |=< CONFIGURATION >=================|
 
@@ -85,13 +85,26 @@ def mvln [src: path, dest: path]: nothing -> nothing {
 # Makes a temporary file in /tmp/nu/ and returns it's path, pipe input to fill it's contents.
 @example "Diff the output of two commands" {diff (ls | to text | as-tmp) (ls .. | to text | as-tmp)}
 @example "Edit all files that contain 'fox' as a quickfix" {rg fox --vimgrep | as-tmp | nvim -q $in}
-def as-tmp []: any -> path {
+def as-tmp [--directory (-d)]: any -> path {
   let content = $in
   mkdir $TMP_DIR
+
+  if ($directory) {
+    let tmp = mktemp --tmpdir-path $TMP_DIR XXXXXXXX --directory
+    return $tmp
+  }
 
   let tmp = mktemp --tmpdir-path $TMP_DIR XXXXXXXX
   if ($content != null) {
     $content | save -f $tmp
   }
   $tmp
+}
+
+# Starts a new nu session in a temporary folder, returns the folder's path
+@example "Open the scratchpad dir" {scratchpad}
+def scratchpad []: nothing -> path {
+  let tmp_dir = as-tmp -d
+  nu --execute $"cd ($tmp_dir)"
+  $tmp_dir
 }
