@@ -3,6 +3,10 @@
 -- Add any additional keymaps here
 
 local wk = require("which-key")
+local yank = require("config.controllers.yank")
 
-vim.keymap.set("x", "g<C-s>", ":sort<CR>", { desc = "Sort selected asc" })
+wk.add({ "<leader>y", icon = "󰅌", group = "yank" })
+vim.keymap.set("n", "<leader>yf", yank.absolute_filepath, { desc = "Absolute filepath" })
+
 wk.add({ "g<C-s>", mode = "x", icon = "" })
+vim.keymap.set("x", "g<C-s>", ":sort<CR>", { desc = "Sort selected asc" })
