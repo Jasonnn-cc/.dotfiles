@@ -3,13 +3,13 @@
 -- Add any additional keymaps here
 
 local wk = require("which-key")
-local yank = require("config.controllers.yank")
+local pathyank = require("config.controllers.pathyank")
 
 wk.add({ "<leader>y", icon = "󰅌", group = "yank" })
-vim.keymap.set("n", "<leader>yf", yank.absolute_filepath, { desc = "Absolute filepath" })
+vim.keymap.set("n", "<leader>yf", pathyank.absolute_filepath, { desc = "Absolute filepath" })
 
 wk.add({ "<leader>y", mode = "x", icon = "󰅌", group = "yank" })
-vim.keymap.set("x", "<leader>yf", yank.absolute_filepath_with_lines, { desc = "Absolute filepath + line(s)" })
+vim.keymap.set("x", "<leader>yf", pathyank.absolute_filepath_with_lines, { desc = "Absolute filepath + line(s)" })
 
 wk.add({ "g<C-s>", mode = "x", icon = "" })
 vim.keymap.set("x", "g<C-s>", ":sort<CR>", { desc = "Sort selected asc" })
