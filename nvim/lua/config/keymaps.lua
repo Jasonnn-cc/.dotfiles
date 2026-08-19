@@ -8,5 +8,8 @@ local yank = require("config.controllers.yank")
 wk.add({ "<leader>y", icon = "󰅌", group = "yank" })
 vim.keymap.set("n", "<leader>yf", yank.absolute_filepath, { desc = "Absolute filepath" })
 
+wk.add({ "<leader>y", mode = "x", icon = "󰅌", group = "yank" })
+vim.keymap.set("x", "<leader>yf", yank.absolute_filepath_with_lines, { desc = "Absolute filepath + line(s)" })
+
 wk.add({ "g<C-s>", mode = "x", icon = "" })
 vim.keymap.set("x", "g<C-s>", ":sort<CR>", { desc = "Sort selected asc" })
