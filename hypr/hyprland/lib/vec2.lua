@@ -32,8 +32,8 @@ end
 function Vec2.from_direction(direction)
 	local direction_to_normal = {
 		l = { x = -1, y = 0 },
-		d = { x = 0, y = -1 },
-		u = { x = 0, y = 1 },
+		d = { x = 0, y = 1 },
+		u = { x = 0, y = -1 },
 		r = { x = 1, y = 0 },
 	}
 
