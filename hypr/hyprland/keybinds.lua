@@ -5,6 +5,7 @@ local motions = { H = "l", J = "d", K = "u", L = "r" }
 local exec_binds = {
 	["SUPER + Q"] = "kitty",
 	["SUPER + R"] = "rofi -show drun",
+	["SUPER + V"] = "clipvault list | rofi -dmenu -display-columns 2 -p clipboard | clipvault get | wl-copy",
 	["SUPER + SHIFT + R"] = "rofi -show calc -modi calc -no-show-match -no-sort | wl-copy",
 	["SUPER + PERIOD"] = "rofimoji",
 	["SUPER + ALT + B"] = "zen-browser",
