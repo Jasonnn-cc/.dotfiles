@@ -21,6 +21,7 @@ hl.bind("SUPER + F", hl.dsp.window.float())
 
 -- Mouse
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true, drag = true })
+hl.bind("SUPER + SHIFT + mouse:272", hl.dsp.window.resize(), { mouse = true, drag = true })
 
 -- Gestures
 hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
