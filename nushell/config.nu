@@ -51,6 +51,7 @@ alias sudo = sudo-rs
 alias l = ls
 alias cl = clear
 alias gg = ginkgo
+alias cc = claude
 
 # |=< CONSTANTS >=====================|
 
