@@ -14,6 +14,7 @@ vim.keymap.set("n", "<leader>yK", lspyank.hover_signature, { desc = "Hovered typ
 
 wk.add({ "<leader>y", mode = "x", icon = "󰅌", group = "yank" })
 vim.keymap.set("x", "<leader>yf", pathyank.absolute_filepath_with_lines, { desc = "Absolute filepath + line(s)" })
+vim.keymap.set("x", "<leader>yr", pathyank.git_relative_filepath_with_lines, { desc = "Path from git root + line(s)" })
 
 wk.add({ "g<C-s>", mode = "x", icon = "" })
 vim.keymap.set("x", "g<C-s>", ":sort<CR>", { desc = "Sort selected asc" })

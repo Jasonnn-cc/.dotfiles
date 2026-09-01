@@ -46,6 +46,35 @@ function M.git_root_path()
   end
 end
 
+--- `path` made relative to the git root containing it, or nil (with a warning) when it is not
+--- inside a git repository.
+---@param path string
+---@return string|nil
+local function relative_to_git_root(path)
+  local root = git_root(vim.fs.dirname(path))
+  if not root then
+    return nil
+  end
+  -- +2 skips the root itself and the separator that follows it.
+  return path:sub(#root + 2)
+end
+
+--- The visually selected line range as a path suffix: `:line` for a single line, `:first-last`
+--- for several. Intended for visual/select modes.
+---@return string
+local function line_suffix()
+  -- "v" is the visual anchor and "." the cursor; reading both keeps us from having to leave visual
+  -- mode to let '< and '> settle, and either end may come first.
+  local first, last = vim.fn.line("v"), vim.fn.line(".")
+  if first > last then
+    first, last = last, first
+  end
+  if first == last then
+    return string.format(":%d", first)
+  end
+  return string.format(":%d-%d", first, last)
+end
+
 --- Yank the current buffer's file path relative to its git root.
 --- Warns and yanks nothing when the buffer has no file or is not inside a git repository.
 function M.git_relative_filepath()
@@ -53,10 +82,24 @@ function M.git_relative_filepath()
   if not path then
     return
   end
-  local root = git_root(vim.fs.dirname(path))
-  if root then
-    -- +2 skips the root itself and the separator that follows it.
-    copy(path:sub(#root + 2))
+  local relative = relative_to_git_root(path)
+  if relative then
+    copy(relative)
+  end
+end
+
+--- Yank the current buffer's file path relative to its git root, suffixed with the visually
+--- selected line range, as `path:line` for a single line or `path:first-last` for several.
+--- Warns and yanks nothing when the buffer has no file or is not inside a git repository.
+--- Intended for visual/select modes.
+function M.git_relative_filepath_with_lines()
+  local path = buffer_path()
+  if not path then
+    return
+  end
+  local relative = relative_to_git_root(path)
+  if relative then
+    copy(relative .. line_suffix())
   end
 end
 
@@ -74,19 +117,8 @@ end
 --- Warns and yanks nothing when the buffer has no file. Intended for visual/select modes.
 function M.absolute_filepath_with_lines()
   local path = buffer_path()
-  if not path then
-    return
-  end
-  -- "v" is the visual anchor and "." the cursor; reading both keeps us from having to leave visual
-  -- mode to let '< and '> settle, and either end may come first.
-  local first, last = vim.fn.line("v"), vim.fn.line(".")
-  if first > last then
-    first, last = last, first
-  end
-  if first == last then
-    copy(string.format("%s:%d", path, first))
-  else
-    copy(string.format("%s:%d-%d", path, first, last))
+  if path then
+    copy(path .. line_suffix())
   end
 end
 
