@@ -7,6 +7,8 @@ local pathyank = require("config.controllers.pathyank")
 
 wk.add({ "<leader>y", icon = "󰅌", group = "yank" })
 vim.keymap.set("n", "<leader>yf", pathyank.absolute_filepath, { desc = "Absolute filepath" })
+vim.keymap.set("n", "<leader>yg", pathyank.git_root_path, { desc = "Path to git root" })
+vim.keymap.set("n", "<leader>yr", pathyank.git_relative_filepath, { desc = "Relative path from git root" })
 
 wk.add({ "<leader>y", mode = "x", icon = "󰅌", group = "yank" })
 vim.keymap.set("x", "<leader>yf", pathyank.absolute_filepath_with_lines, { desc = "Absolute filepath + line(s)" })
