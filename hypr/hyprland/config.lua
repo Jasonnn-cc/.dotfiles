@@ -30,4 +30,7 @@ hl.config({
 	xwayland = {
 		force_zero_scaling = true,
 	},
+	misc = {
+		middle_click_paste = false,
+	},
 })
