@@ -16,6 +16,7 @@ local exec_binds = {
 	["SUPER + ALT + L"] = "hyprlock",
 	["XF86MonBrightnessUp"] = "brightnessctl set 5%+",
 	["XF86MonBrightnessDown"] = "brightnessctl set 5%-",
+	["SUPER + U"] = "hyprshade toggle catppuccinify",
 }
 
 hl.bind("SUPER + C", hl.dsp.window.close())
