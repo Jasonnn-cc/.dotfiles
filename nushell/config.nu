@@ -3,6 +3,7 @@ use std/config env-conversions
 # |=< CONFIGURATION >=================|
 
 $env.config.show_banner = false
+$env.config.rm.always_trash = true
 
 # |=< NUSHELL COMPLETION >============|
 
