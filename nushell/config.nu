@@ -105,8 +105,14 @@ def as-tmp [--directory (-d)]: any -> path {
 
 # Starts a new nu session in a temporary folder, returns the folder's path
 @example "Open the scratchpad dir" {scratchpad}
-def scratchpad []: nothing -> path {
+def scratchpad [--no-history]: nothing -> path {
   let tmp_dir = as-tmp -d
-  nu --execute $"cd ($tmp_dir)"
+  mut flags = []
+
+  if $no_history {
+    $flags ++= [--no-history]
+  }
+
+  nu ...$flags --execute $"cd ($tmp_dir)"
   $tmp_dir
 }
