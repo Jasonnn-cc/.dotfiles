@@ -65,6 +65,31 @@ def mvln [src: path, dest: path]: nothing -> nothing {
   ln -s $target_dest ( $src | str trim -c '/' )
 }
 
+# Move a symlink's target to the symlink's path and remove the symlink
+@example "Undo a symlink created by mvln" {unln ~/.zshrc}
+def unln [link: path]: nothing -> nothing {
+  let link_path = ($link | path expand --no-symlink)
+  if ($link_path | path type) != "symlink" {
+    let span = (metadata $link).span
+    error make {msg: $"Not a symlink: ($link)", label: {text: "expected a symbolic link", span: $span}}
+  }
+
+  let target = (^readlink -- $link_path)
+  let target_path = if ($target starts-with "/") {
+    $target
+  } else {
+    $link_path | path dirname | path join $target
+  }
+  let source_path = ($target_path | path expand)
+  if not ($source_path | path exists) {
+    let span = (metadata $link).span
+    error make {msg: $"Symlink target does not exist: ($target_path)", label: {text: "symlink path here", span: $span}}
+  }
+
+  rm --permanent $link_path
+  mv $source_path $link_path
+}
+
 # Makes a temporary file in /tmp/nu/ and returns it's path, pipe input to fill it's contents.
 @example "Diff the output of two commands" {diff (ls | to text | as-tmp) (ls .. | to text | as-tmp)}
 @example "Edit all files that contain 'fox' as a quickfix" {rg fox --vimgrep | as-tmp | nvim -q $in}
