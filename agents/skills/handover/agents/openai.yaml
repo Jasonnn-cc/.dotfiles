@@ -1,0 +1,5 @@
+interface:
+  display_name: "Handover"
+  short_description: "Write a handover for work in progress"
+policy:
+  allow_implicit_invocation: false
