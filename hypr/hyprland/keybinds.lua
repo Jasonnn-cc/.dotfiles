@@ -9,6 +9,7 @@ local exec_binds = {
 	["SUPER + V"] = "clipvault list | rofi -dmenu -display-columns 2 -p clipboard | clipvault get | wl-copy",
 	["SUPER + P"] = "hyprshot -m output -m active --clipboard-only",
 	["SUPER + SHIFT + P"] = "hyprshot -m region -m active --clipboard-only -z",
+	["SUPER + CTRL + P"] = [[timeout 5 wf-recorder -g "$(slurp)" -f "$HOME/Videos/$(date '+%Y-%m-%d_%H-%M-%S').mp4"]],
 	["SUPER + PERIOD"] = "rofimoji",
 	["SUPER + ALT + B"] = "zen-browser",
 	["SUPER + ALT + F"] = "dolphin",
