@@ -23,6 +23,11 @@ Singleton {
         readonly property string icon: "\uEFC5"
     }
 
+    readonly property var network: QtObject {
+        // Icons by signal strength: none, weak, fair, good, strong.
+        readonly property var icons: ["\uDB82\uDD2F", "\uDB82\uDD1F", "\uDB82\uDD22", "\uDB82\uDD25", "\uDB82\uDD28"]
+    }
+
     readonly property var topBar: QtObject {
         readonly property double padding: 8
         readonly property double spacing: 4
@@ -30,7 +35,8 @@ Singleton {
     }
 
     readonly property var informationWidget: QtObject {
-        // Fixed width shared by all InformationWidgets so their bars line up.
+        // Base width for InformationWidgets so their bars line up.
+        // The network widget is 2x this and crops its name to fit.
         readonly property double width: 74
     }
 

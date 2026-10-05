@@ -34,6 +34,8 @@ Scope {
                 TopBarSeparator {},
                 MemoryWidget {},
                 TopBarSeparator {},
+                NetworkWidget {},
+                TopBarSeparator {},
                 BatteryWidget {}
             ]
             color: Globals.palette.base
