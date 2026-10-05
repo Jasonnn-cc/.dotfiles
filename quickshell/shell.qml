@@ -30,6 +30,10 @@ Scope {
             ]
             right: [
                 TopBarSeparator {},
+                CpuWidget {},
+                TopBarSeparator {},
+                MemoryWidget {},
+                TopBarSeparator {},
                 BatteryWidget {}
             ]
             color: Globals.palette.base
