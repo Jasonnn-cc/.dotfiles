@@ -15,7 +15,7 @@ Singleton {
         running: true
 
         stdout: StdioCollector {
-            onStreamFinished: root.date = this.text
+            onStreamFinished: root.date = this.text.trim()
         }
     }
 
