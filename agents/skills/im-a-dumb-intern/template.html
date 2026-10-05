@@ -1,0 +1,278 @@
+<!-- Starter for an explainer page. Copy it, replace every REPLACE comment and placeholder, and delete the components you don't use. -->
+<title>REPLACE Page Name</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: REPLACE one line on the layout. Colour roles: REPLACE e.g. blue = Postgres, amber = ClickHouse, green = the fix, red = wrong. */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --ink: #1b2130;
+  --muted: #5a6374;
+  --line: #d6dbe3;
+  --code-bg: #edf0f5;
+  --blue: #2f5bd3;   --blue-soft: #e6ecfb;
+  --amber: #b0650c;  --amber-soft: #fbeedb;
+  --green: #0f7f66;  --green-soft: #dcf2ea;
+  --violet: #7a4fd0; --violet-soft: #efe8fc;
+  --red: #c0362c;    --red-soft: #fbe6e3;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151c; --surface: #19202a; --ink: #e3e8ef; --muted: #98a2b3; --line: #2d3644; --code-bg: #212836;
+    --blue: #84a6ff; --blue-soft: #1c2a47; --amber: #f0a858; --amber-soft: #3a2a14;
+    --green: #4fcfa9; --green-soft: #13342b; --violet: #b597f2; --violet-soft: #2a2142;
+    --red: #f07a6e; --red-soft: #3d1d1a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #19202a; --ink: #e3e8ef; --muted: #98a2b3; --line: #2d3644; --code-bg: #212836;
+  --blue: #84a6ff; --blue-soft: #1c2a47; --amber: #f0a858; --amber-soft: #3a2a14;
+  --green: #4fcfa9; --green-soft: #13342b; --violet: #b597f2; --violet-soft: #2a2142;
+  --red: #f07a6e; --red-soft: #3d1d1a;
+  color-scheme: dark;
+}
+/* role helpers: set --k / --ks on any element with these */
+.k-blue { --k: var(--blue); --ks: var(--blue-soft); } .k-amber { --k: var(--amber); --ks: var(--amber-soft); }
+.k-green { --k: var(--green); --ks: var(--green-soft); } .k-violet { --k: var(--violet); --ks: var(--violet-soft); }
+.k-red { --k: var(--red); --ks: var(--red-soft); }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.6; padding-inline: 20px; padding-block: 0 64px; }
+.wrap { max-width: 1140px; margin: 0 auto; display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 48px; }
+.wrap:not(:has(nav.toc)) { grid-template-columns: minmax(0, 1fr); max-width: 820px; }
+@media (max-width: 900px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; } nav.toc { display: none; } }
+
+nav.toc { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; padding-block: 40px; font-size: 14px; max-height: 100vh; overflow-y: auto; }
+nav.toc p { margin: 0 0 10px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+nav.toc li.part { margin-top: 14px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--k, var(--muted)); }
+nav.toc li.part:first-child { margin-top: 0; }
+nav.toc a { color: var(--muted); text-decoration: none; display: flex; gap: 8px; padding: 2px 0; }
+nav.toc a .n { font-family: var(--font-mono); font-size: 12px; color: var(--ink); min-width: 1.6em; padding-top: 2px; }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--ink); }
+
+main { min-width: 0; max-width: 780px; }
+header.hero { padding-block: 48px 8px; }
+.eyebrow { font-family: var(--font-mono); font-size: 13px; color: var(--muted); letter-spacing: .02em; margin: 0 0 12px; }
+h1 { font-family: var(--font-display); font-size: clamp(34px, 6vw, 52px); line-height: 1.05; letter-spacing: -.02em; margin: 0 0 16px; text-wrap: balance; }
+.lede { font-size: 20px; color: var(--muted); margin: 0 0 24px; max-width: 62ch; }
+.learn { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; }
+.learn h2 { font-family: var(--font-body); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+.learn ul { margin: 0; padding-left: 20px; }
+.parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 16px; }
+.parts a { display: flex; flex-direction: column; gap: 2px; text-decoration: none; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--k); border-radius: 8px; padding: 12px 14px; font-size: 15px; line-height: 1.4; }
+.parts a b { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--k); }
+.parts a:focus-visible { outline: 2px solid var(--k); outline-offset: 2px; }
+
+.part-head { margin-top: 72px; padding: 18px 20px; border-radius: 10px; background: var(--ks); border: 1px solid var(--k); }
+.part-head .eyebrow { color: var(--k); margin: 0 0 4px; font-weight: 600; }
+.part-head h2 { font-family: var(--font-display); font-size: clamp(26px, 4vw, 34px); line-height: 1.15; margin: 0 0 6px; text-wrap: balance; }
+.part-head p { margin: 0; max-width: 64ch; }
+
+section { padding-top: 48px; scroll-margin-top: 16px; }
+h2.sec { font-family: var(--font-display); font-size: clamp(23px, 3.4vw, 29px); line-height: 1.2; letter-spacing: -.01em; margin: 0 0 14px; text-wrap: balance; display: flex; gap: 12px; align-items: baseline; }
+h2.sec .n { font-family: var(--font-mono); font-size: 15px; font-weight: 600; color: var(--k, var(--muted)); }
+h3 { font-size: 18px; margin: 28px 0 8px; }
+p { margin: 0 0 14px; max-width: 68ch; }
+ul, ol { max-width: 66ch; margin: 0 0 14px; }
+li { margin-bottom: 4px; }
+
+code { font-family: var(--font-mono); font-size: .84em; background: var(--code-bg); border-radius: 4px; padding: 1px 5px; overflow-wrap: anywhere; }
+pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; overflow-x: auto; font-family: var(--font-mono); font-size: 13.5px; line-height: 1.6; margin: 0 0 16px; }
+pre code { background: none; padding: 0; font-size: inherit; overflow-wrap: normal; }
+.c { color: var(--muted); font-style: italic; }
+.kw { color: var(--blue); font-weight: 600; }
+.mark { display: inline-block; min-width: 1.6em; text-align: center; font-weight: 700; font-style: normal; color: var(--surface); background: var(--k, var(--muted)); border-radius: 4px; padding: 0 4px; }
+
+.analogy { border-left: 3px solid var(--green); background: var(--green-soft); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 0 0 18px; max-width: 68ch; }
+.analogy strong { color: var(--green); }
+.callout { border: 1px solid var(--k, var(--amber)); background: var(--ks, var(--amber-soft)); padding: 12px 16px; border-radius: 8px; margin: 0 0 18px; max-width: 68ch; }
+.callout p:last-child, .analogy p:last-child { margin-bottom: 0; }
+.callout .t { font-weight: 700; color: var(--k, var(--amber)); }
+
+figure { margin: 22px 0 26px; }
+.fig-box { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; overflow-x: auto; }
+.fig-box svg { display: block; width: 100%; min-width: 620px; height: auto; font-family: var(--font-body); }
+figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; max-width: 68ch; }
+
+/* SVG: boxes, text, lines, all token-driven */
+.d-box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+.d-ink { fill: var(--surface); stroke: var(--ink); stroke-width: 1.5; }
+.d-blue { fill: var(--blue-soft); stroke: var(--blue); stroke-width: 1.5; } .d-amber { fill: var(--amber-soft); stroke: var(--amber); stroke-width: 1.5; }
+.d-green { fill: var(--green-soft); stroke: var(--green); stroke-width: 1.5; } .d-violet { fill: var(--violet-soft); stroke: var(--violet); stroke-width: 1.5; }
+.d-red { fill: var(--red-soft); stroke: var(--red); stroke-width: 1.5; }
+.d-t { fill: var(--ink); font-size: 14px; font-weight: 700; }
+.d-s { fill: var(--muted); font-size: 12px; }
+.d-m { fill: var(--muted); font-size: 12px; font-family: var(--font-mono); }
+.d-mi { fill: var(--ink); font-size: 12.5px; font-family: var(--font-mono); font-weight: 600; }
+.t-blue { fill: var(--blue); font-size: 12.5px; font-weight: 700; } .t-amber { fill: var(--amber); font-size: 12.5px; font-weight: 700; }
+.t-green { fill: var(--green); font-size: 12.5px; font-weight: 700; } .t-violet { fill: var(--violet); font-size: 12.5px; font-weight: 700; }
+.t-red { fill: var(--red); font-size: 12.5px; font-weight: 700; }
+.d-line { stroke: var(--muted); stroke-width: 1.6; fill: none; }
+.l-blue { stroke: var(--blue); stroke-width: 1.8; fill: none; } .l-amber { stroke: var(--amber); stroke-width: 1.8; fill: none; }
+.l-green { stroke: var(--green); stroke-width: 1.8; fill: none; } .l-violet { stroke: var(--violet); stroke-width: 1.8; fill: none; }
+.l-red { stroke: var(--red); stroke-width: 1.8; fill: none; }
+.d-dash { stroke-dasharray: 5 5; }
+.d-grid { stroke: var(--line); stroke-width: 1; }
+.ah-muted { fill: var(--muted); } .ah-blue { fill: var(--blue); } .ah-amber { fill: var(--amber); } .ah-green { fill: var(--green); } .ah-violet { fill: var(--violet); } .ah-red { fill: var(--red); }
+
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+.table-scroll { overflow-x: auto; margin: 0 0 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+tr:last-child td { border-bottom: 0; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: var(--font-mono); font-size: 13.5px; }
+td code { white-space: nowrap; }
+.ok { color: var(--green); font-weight: 700; }
+.wrong { color: var(--red); font-weight: 700; }
+
+.pill { display: inline-block; font-family: var(--font-mono); font-size: 11.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; border: 1.5px solid var(--k); color: var(--k); background: var(--ks); white-space: nowrap; }
+.pill.new { --k: var(--green); --ks: var(--green-soft); } .pill.edit { --k: var(--amber); --ks: var(--amber-soft); }
+.pill.gone { --k: var(--red); --ks: var(--red-soft); } .pill.same { --k: var(--muted); --ks: var(--code-bg); }
+
+.steps { counter-reset: step; list-style: none; padding: 0; display: grid; gap: 10px; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 10px; margin: 0; }
+.steps li::before { content: counter(step); font-family: var(--font-mono); font-weight: 600; color: var(--surface); background: var(--k, var(--muted)); border-radius: 4px; height: 24px; display: grid; place-items: center; font-size: 13px; margin-top: 2px; }
+.steps li > span { min-width: 0; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 0 0 18px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.card .k { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--k, var(--muted)); font-weight: 600; }
+.card p { margin: 0; font-size: 15.5px; }
+.card h3 { margin: 0; font-size: 16.5px; }
+
+dl.gloss { display: grid; grid-template-columns: minmax(140px, 210px) minmax(0, 1fr); gap: 0; margin: 0; border-top: 1px solid var(--line); }
+dl.gloss dt, dl.gloss dd { padding: 10px 0; border-bottom: 1px solid var(--line); margin: 0; }
+dl.gloss dt { font-weight: 700; padding-right: 16px; }
+@media (max-width: 560px) { dl.gloss { grid-template-columns: minmax(0, 1fr); } dl.gloss dt { border-bottom: 0; padding-bottom: 0; } }
+
+a { color: var(--blue); }
+a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 2px; }
+footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+footer p { max-width: none; }
+</style>
+
+<!-- Shared arrowheads: use the one matching the line's colour -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-muted"/></marker>
+    <marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-blue"/></marker>
+    <marker id="ah-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-amber"/></marker>
+    <marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-green"/></marker>
+    <marker id="ah-violet" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-violet"/></marker>
+    <marker id="ah-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-red"/></marker>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <!-- Contents rail: keep for more than 7 sections, otherwise delete this nav -->
+  <nav class="toc" aria-label="Contents">
+    <p>Contents</p>
+    <ol>
+      <li class="part k-blue">Part 1 · REPLACE</li>
+      <li><a href="#s1"><span class="n">1</span>REPLACE short title</a></li>
+      <li class="part">Reference</li>
+      <li><a href="#glossary"><span class="n">·</span>Glossary</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="eyebrow">REPLACE repo/path · area</p>
+      <h1>REPLACE page name</h1>
+      <p class="lede">REPLACE what this page explains, and why it matters for what the reader is about to do.</p>
+      <div class="learn">
+        <h2>You'll learn</h2>
+        <ul>
+          <li>REPLACE 3 to 5 outcomes</li>
+        </ul>
+      </div>
+      <!-- Only for a multi-part page -->
+      <div class="parts">
+        <a class="k-blue" href="#s1"><b>Part 1</b>REPLACE what part 1 covers</a>
+      </div>
+    </header>
+
+    <!-- Only for a multi-part page -->
+    <div class="part-head k-blue">
+      <p class="eyebrow">Part 1</p>
+      <h2>REPLACE part title</h2>
+      <p>REPLACE one or two sentences on what this part covers.</p>
+    </div>
+
+    <section id="s1" class="k-blue">
+      <h2 class="sec"><span class="n">1</span>REPLACE section title</h2>
+      <p>REPLACE prose. Define a term the first time it appears, then name it: "… This is called a <strong>mutex</strong>."</p>
+
+      <div class="analogy">
+        <p><strong>Analogy.</strong> REPLACE one everyday comparison for this concept.</p>
+      </div>
+
+      <figure>
+        <div class="fig-box">
+          <svg viewBox="0 0 760 150" role="img" aria-label="REPLACE what the diagram shows, in one sentence.">
+            <rect x="20" y="40" width="200" height="64" rx="8" class="d-ink"/>
+            <text x="120" y="66" text-anchor="middle" class="d-t">REPLACE box</text>
+            <text x="120" y="86" text-anchor="middle" class="d-s">REPLACE subtitle</text>
+            <rect x="540" y="40" width="200" height="64" rx="8" class="d-blue"/>
+            <text x="640" y="66" text-anchor="middle" class="d-t">REPLACE box</text>
+            <text x="640" y="86" text-anchor="middle" class="d-m">REPLACE mono label</text>
+            <line x1="220" y1="72" x2="537" y2="72" class="l-blue" marker-end="url(#ah-blue)"/>
+            <text x="378" y="62" text-anchor="middle" class="t-blue">REPLACE edge label</text>
+          </svg>
+        </div>
+        <figcaption>REPLACE the takeaway of this figure.</figcaption>
+      </figure>
+
+      <div class="callout k-red">
+        <p><span class="t">REPLACE lead-in.</span> REPLACE a warning, decision or unverified claim. Use k-blue for info, k-green for good news, k-red for wrong.</p>
+      </div>
+    </section>
+
+    <section id="code-walkthrough" class="k-blue">
+      <h2 class="sec"><span class="n">2</span>Reading the code</h2>
+      <p>REPLACE where this lives: <code>path/to/file.go</code>.</p>
+<pre><code><span class="kw">func</span> REPLACE() {
+    step()   <span class="c">// </span><span class="mark">1</span>
+}</code></pre>
+      <ol class="steps">
+        <li><span><strong>REPLACE what mark 1 does.</strong> REPLACE why.</span></li>
+      </ol>
+    </section>
+
+    <section id="changes">
+      <h2 class="sec"><span class="n">3</span>What changes</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Status</th><th>Where</th><th>What</th></tr></thead>
+          <tbody>
+            <tr><td><span class="pill new">New</span></td><td><code>REPLACE</code></td><td>REPLACE</td></tr>
+            <tr><td><span class="pill edit">Edited</span></td><td><code>REPLACE</code></td><td>REPLACE</td></tr>
+            <tr><td><span class="pill gone">Removed</span></td><td><code>REPLACE</code></td><td>REPLACE</td></tr>
+            <tr><td><span class="pill same">Unchanged</span></td><td>REPLACE</td><td>REPLACE</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cards">
+        <div class="card k-amber"><span class="k">Decision</span><h3>REPLACE question</h3><p>REPLACE the options and what each means.</p></div>
+      </div>
+    </section>
+
+    <section id="glossary">
+      <h2 class="sec"><span class="n">·</span>Glossary</h2>
+      <dl class="gloss">
+        <dt>REPLACE term</dt><dd>REPLACE plain definition.</dd>
+      </dl>
+    </section>
+
+    <footer>
+      <p>Sources: REPLACE files, docs, commits and checks. Related: <a href="https://claude.ai/artifact/AvpmGFS1w9BCgM3uB4cYY4">DSP Reporting Map</a>, <a href="https://claude.ai/artifact/JxjJx2nUU3wRChRFQKtRTA">The Watermark Cache</a>.</p>
+    </footer>
+  </main>
+</div>
