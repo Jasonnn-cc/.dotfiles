@@ -6,6 +6,9 @@ import QtQuick
 
 Singleton {
     id: root
-    property var activeWindow: ToplevelManager.activeToplevel
-    property string activeTitle: activeWindow?.title ?? ""
+
+    readonly property var waylandWindow: ToplevelManager.activeToplevel
+
+    readonly property string activeTitle: waylandWindow?.title ?? ""
+    readonly property string activeClass: waylandWindow?.appId ?? ""
 }

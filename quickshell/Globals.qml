@@ -4,6 +4,11 @@ import QtQuick
 import Quickshell
 
 Singleton {
+    readonly property var battery: QtObject {
+        readonly property double warningThreshold: 0.15
+        readonly property double dangerThreshold: 0.05
+    }
+
     readonly property var topBar: QtObject {
         readonly property double padding: 8
         readonly property double spacing: 4
@@ -33,6 +38,9 @@ Singleton {
         readonly property string surface: "#313244"
         readonly property string accent: "#f5c2e7"
         readonly property string text: "#cdd6f4"
+
+        readonly property string warning: "#f9e2af"
+        readonly property string danger: "#f38ba8"
     }
 
     readonly property string timeFormat: "+%H:%M:%S"
