@@ -1,5 +1,6 @@
 import Quickshell
 import QtQuick
+import QtQuick.Layouts
 
 import qs
 import qs.layouts
@@ -13,17 +14,15 @@ Scope {
             id: topBar
             left: [
                 WorkspaceWidget {
-                    width: 20
+                    Layout.preferredWidth: 20
                 },
                 TopBarSeparator {},
-                ProcessWidget {
-                    width: 628
-                }
+                ProcessWidget {}
             ]
             center: [
                 TopBarSeparator {},
                 ClockWidget {
-                    width: 56
+                    Layout.preferredWidth: 56
                 },
                 TopBarSeparator {},
                 DateWidget {},

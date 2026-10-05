@@ -1,5 +1,6 @@
 import Quickshell
 import QtQuick
+import QtQuick.Layouts
 
 import qs
 
@@ -19,44 +20,49 @@ PanelWindow {
 
     implicitHeight: Globals.topBar.height
 
-    Row {
-        id: leftRow
-        anchors {
-            verticalCenter: parent.verticalCenter
-        }
-        leftPadding: Globals.topBar.padding
-        spacing: Globals.topBar.spacing
-    }
-    Row {
+    RowLayout {
         id: centerRow
         anchors {
-            centerIn: parent
+            horizontalCenter: parent.horizontalCenter
             verticalCenter: parent.verticalCenter
         }
         spacing: Globals.topBar.spacing
     }
-    Row {
-        id: rightRow
+    RowLayout {
+        id: leftRow
         anchors {
-            right: parent.right
+            left: parent.left
+            leftMargin: Globals.topBar.padding
+            right: centerRow.left
+            rightMargin: Globals.topBar.spacing
             verticalCenter: parent.verticalCenter
         }
-        rightPadding: Globals.topBar.padding
         spacing: Globals.topBar.spacing
+        clip: true
+    }
+    RowLayout {
+        id: rightRow
+        anchors {
+            left: centerRow.right
+            leftMargin: Globals.topBar.spacing
+            right: parent.right
+            rightMargin: Globals.topBar.padding
+            verticalCenter: parent.verticalCenter
+        }
+        spacing: Globals.topBar.spacing
+        clip: true
+
+        Item {
+            Layout.fillWidth: true
+        }
     }
 
     Component.onCompleted: {
-        for (var item of left) {
+        for (var item of left)
             item.parent = leftRow;
-            item.anchors.verticalCenter = leftRow.verticalCenter;
-        }
-        for (var item of center) {
+        for (var item of center)
             item.parent = centerRow;
-            item.anchors.verticalCenter = centerRow.verticalCenter;
-        }
-        for (var item of right) {
+        for (var item of right)
             item.parent = rightRow;
-            item.anchors.verticalCenter = rightRow.verticalCenter;
-        }
     }
 }
