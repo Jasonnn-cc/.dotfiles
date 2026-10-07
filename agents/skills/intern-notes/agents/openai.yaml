@@ -1,0 +1,5 @@
+interface:
+  display_name: "Intern Notes"
+  short_description: "Write Obsidian notes and flashcards to teach a topic"
+policy:
+  allow_implicit_invocation: false
