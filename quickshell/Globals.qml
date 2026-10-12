@@ -40,6 +40,21 @@ Singleton {
         readonly property double width: 74
     }
 
+    readonly property var workTimer: QtObject {
+        // The timer runs for nine hours from boot.
+        readonly property int durationSeconds: 9 * 60 * 60
+        // Only arm the timer for weekday boots within these hours (last is exclusive).
+        readonly property int firstBootHour: 8
+        readonly property int lastBootHour: 12
+    }
+
+    readonly property var tooltip: QtObject {
+        readonly property double padding: 6
+        readonly property double radius: 4
+        // Gap between the tooltip and the item it is anchored to.
+        readonly property double gap: 4
+    }
+
     readonly property var fonts: QtObject {
         readonly property font regular: Qt.font({
             family: "Fira Sans",

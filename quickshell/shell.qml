@@ -21,6 +21,7 @@ Scope {
             ]
             center: [
                 TopBarSeparator {},
+                WorkTimerWidget {},
                 ClockWidget {
                     Layout.preferredWidth: 56
                 },
