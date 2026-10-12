@@ -41,6 +41,8 @@ const TMP_DIR = $nu.temp-dir | path join "nu/"
 
 # |=< CUSTOM COMMANDS >===============|
 
+use prsum.nu
+
 # Stops the graphical session and powers the system off
 @example "Shutdown the system... sometimes" {if (random bool --bias (1 / 6)) {shutdown}}
 def shutdown []: nothing -> nothing {
