@@ -1,43 +1,47 @@
 #version 300 es
 precision highp float;
 
-// Palettizes the screen into Catppuccin Mocha.
+// Literally palettizes the screen to Catppuccin (Mocha + Latte).
 //
-// Every pixel is matched against the 26 Mocha swatches in Oklab, where
-// euclidean distance tracks perceived difference; nearest-neighbour in plain
-// RGB would pick by numeric proximity and shred skin tones and gradients.
+// Every pixel is matched against all 52 swatches (26 per flavour) in Oklab,
+// where euclidean distance tracks perceived difference; nearest-neighbour in
+// plain RGB would pick by numeric proximity and shred skin tones and gradients.
+//
+// The frame is drawn strictly from those 52 colours: every output pixel is one
+// of the swatches. Matching each pixel to a single swatch, though, posterizes
+// smooth gradients into 52 flat bands. To get the in-between tints back, each
+// pixel is dithered between the two swatches nearest to it using an ordered
+// Bayer pattern: across a tile, the second-nearest swatch is chosen at exactly
+// the rate that makes the pair average back to the source colour. It is the
+// classic 1-bit dithering trick, extended from 2 shades to 52.
 //
 // Enable with:
 //   decoration:screen_shader = ~/.config/hypr/shaders/catppuccinify.glsl
 
-// How much of the palettized result to keep; 0.0 passes the frame through.
+// How much of the palettized result to keep; 0.0 passes the frame through and
+// 1.0 is the literal palette.
 #define STRENGTH 1.0
 
-// Weight of the lightness axis when searching for the nearest swatch. Below
-// 1.0 the search is driven mostly by hue and saturation, so a dark red picks
-// Mocha's red rather than collapsing into the nearest grey of the surface
-// ramp. LIGHTNESS_PRESERVE then puts the darkness back.
-#define LIGHTNESS_WEIGHT 0.35
+// How hard to dither between the two nearest swatches. 1.0 reconstructs the
+// source colour on average and is nearly band-free; 0.0 snaps every pixel to
+// its single nearest swatch and the frame collapses into posterized bands.
+#define DITHER 1.0
 
-// How much of the source lightness survives the match. At 1.0 only hue and
-// saturation are quantized and shading is untouched; at 0.0 the frame is
-// reduced to the 26 swatches and flattens into posterized bands.
-#define LIGHTNESS_PRESERVE 0.8
+// Edge length in pixels of one dither cell. 1.0 thresholds per pixel and gives
+// the finest grain; 4.0 stamps each threshold down as a solid 4x4 block, so
+// the pattern reads as deliberate chunky texture instead of fine noise.
+#define DITHER_CHUNK 4.0
 
-// Oklab distance over which the two closest swatches cross-fade. Without it,
-// pixels drifting across a boundary snap between swatches and gradients grow
-// hard contour lines.
-#define SOFTNESS 0.03
-
-#define PALETTE_SIZE 26
+#define PALETTE_SIZE 52
 
 in vec2 v_texcoord;
 uniform sampler2D tex;
 out vec4 fragColor;
 
-// Catppuccin Mocha in Oklab (L, a, b). Precomputed because converting the
-// whole palette per fragment would cost 26 cube roots on every pixel.
+// Catppuccin Mocha and Latte in Oklab (L, a, b). Precomputed because converting
+// the whole palette per fragment would cost 52 cube roots on every pixel.
 const vec3 PALETTE[PALETTE_SIZE] = vec3[PALETTE_SIZE](
+    // Catppuccin Mocha
     vec3(0.92257, 0.02054, 0.01209), // rosewater #f5e0dc
     vec3(0.87974, 0.03977, 0.01290), // flamingo  #f2cdcd
     vec3(0.87003, 0.06882, -0.03020), // pink      #f5c2e7
@@ -63,7 +67,34 @@ const vec3 PALETTE[PALETTE_SIZE] = vec3[PALETTE_SIZE](
     vec3(0.32402, 0.00662, -0.03119), // surface0  #313244
     vec3(0.24287, 0.00730, -0.02947), // base      #1e1e2e
     vec3(0.21552, 0.00618, -0.02465), // mantle    #181825
-    vec3(0.18278, 0.00500, -0.01975) // crust     #11111b
+    vec3(0.18278, 0.00500, -0.01975), // crust     #11111b
+    // Catppuccin Latte
+    vec3(0.71413, 0.08758, 0.05709), // rosewater #dc8a78
+    vec3(0.68564, 0.11768, 0.04486), // flamingo  #dd7878
+    vec3(0.72556, 0.16176, -0.06393), // pink      #ea76cb
+    vec3(0.55467, 0.11372, -0.22303), // mauve     #8839ef
+    vec3(0.55047, 0.20276, 0.07304), // red       #d20f39
+    vec3(0.62520, 0.18456, 0.06817), // maroon    #e64553
+    vec3(0.69198, 0.15061, 0.13767), // peach     #fe640b
+    vec3(0.71399, 0.05652, 0.13834), // yellow    #df8e1d
+    vec3(0.62504, -0.13659, 0.11282), // green     #40a02b
+    vec3(0.60227, -0.09153, -0.03533), // teal      #179299
+    vec3(0.68202, -0.08227, -0.11918), // sky       #04a5e5
+    vec3(0.64774, -0.08966, -0.05798), // sapphire  #209fb5
+    vec3(0.55862, -0.03105, -0.22336), // blue      #1e66f5
+    vec3(0.66376, 0.00957, -0.17484), // lavender  #7287fd
+    vec3(0.43547, 0.00697, -0.04244), // text      #4c4f69
+    vec3(0.49200, 0.00622, -0.03798), // subtext1  #5c5f77
+    vec3(0.54708, 0.00542, -0.03391), // subtext0  #6c6f85
+    vec3(0.60088, 0.00461, -0.03014), // overlay2  #7c7f93
+    vec3(0.65355, 0.00380, -0.02661), // overlay1  #8c8fa1
+    vec3(0.70767, 0.00190, -0.02359), // overlay0  #9ca0b0
+    vec3(0.75839, 0.00113, -0.02042), // surface2  #acb0be
+    vec3(0.80831, 0.00036, -0.01739), // surface1  #bcc0cc
+    vec3(0.85748, -0.00039, -0.01447), // surface0  #ccd0da
+    vec3(0.95776, -0.00055, -0.00574), // base      #eff1f5
+    vec3(0.93346, -0.00083, -0.00867), // mantle    #e6e9ef
+    vec3(0.90596, -0.00112, -0.01166) // crust     #dce0e8
   );
 
 // Decodes an sRGB triple to linear light.
@@ -109,51 +140,72 @@ vec3 oklab_to_linear(vec3 c) {
   );
 }
 
-// Blends the two swatches closest to `lab` into a single Oklab colour.
-vec3 nearest_swatches(vec3 lab) {
-  // Squared distances, kept unrooted through the search; only the winners
-  // need the sqrt that the SOFTNESS comparison below is expressed in.
-  float best = 1e9;
-  float runner_up = 1e9;
-  vec3 best_lab = PALETTE[0];
-  vec3 runner_up_lab = PALETTE[0];
+// Finds the two palette entries closest to `lab`, nearest first. Distances are
+// squared and left unrooted; the dither below never needs the true distance.
+void two_nearest(vec3 lab, out vec3 best, out vec3 runner_up) {
+  float best_d = 1e9;
+  float runner_up_d = 1e9;
+  best = PALETTE[0];
+  runner_up = PALETTE[0];
 
   for (int i = 0; i < PALETTE_SIZE; i++) {
     vec3 swatch = PALETTE[i];
-    vec3 delta = vec3(LIGHTNESS_WEIGHT, 1.0, 1.0) * (swatch - lab);
+    vec3 delta = swatch - lab;
     float d = dot(delta, delta);
 
-    if (d < best) {
+    if (d < best_d) {
+      runner_up_d = best_d;
       runner_up = best;
-      runner_up_lab = best_lab;
-      best = d;
-      best_lab = swatch;
-    } else if (d < runner_up) {
-      runner_up = d;
-      runner_up_lab = swatch;
+      best_d = d;
+      best = swatch;
+    } else if (d < runner_up_d) {
+      runner_up_d = d;
+      runner_up = swatch;
     }
   }
+}
 
-  // Equidistant swatches meet at an even mix and separate from there, so the
-  // seam between two regions of the palette reads as a ramp, not an edge.
-  float gap = sqrt(runner_up) - sqrt(best);
-  float blend = 0.5 * (1.0 - clamp(gap / SOFTNESS, 0.0, 1.0));
+// 2x2 ordered-dither threshold, the base case of the Bayer construction.
+float bayer2(vec2 a) {
+  a = floor(a);
+  return fract(a.x * 0.5 + a.y * a.y * 0.75);
+}
 
-  return mix(best_lab, runner_up_lab, blend);
+// Ordered 8x8 Bayer threshold in [0, 1). Folding the coordinates mod 8 keeps
+// the pattern tile-aligned and the arithmetic small however dense the screen.
+// The result is a stable grid of thresholds, so the dither holds still between
+// frames instead of crawling like white noise would.
+float bayer8(vec2 a) {
+  a = mod(a, 8.0);
+  return bayer2(a * 0.25) * 0.0625 + bayer2(a * 0.5) * 0.25 + bayer2(a);
 }
 
 void main() {
   vec4 pix_color = texture(tex, v_texcoord);
 
   vec3 lab = linear_to_oklab(srgb_to_linear(pix_color.rgb));
-  vec3 matched = nearest_swatches(lab);
+  vec3 best;
+  vec3 runner_up;
+  two_nearest(lab, best, runner_up);
 
-  // The match decided hue and saturation; lightness comes back from the
-  // source so shading, text antialiasing and gradients stay legible.
-  matched.x = mix(matched.x, lab.x, LIGHTNESS_PRESERVE);
+  // Where the pixel sits along the segment from `best` to `runner_up`: 0 at
+  // one swatch, 1 at the other. Choosing `runner_up` at exactly this rate
+  // makes the two colours average back to the source, so the dither carries
+  // the detail the 52 swatches cannot hold on their own.
+  vec3 span = runner_up - best;
+  float t = clamp(dot(lab - best, span) / max(dot(span, span), 1e-9), 0.0, 1.0);
+  float probability = clamp(t * DITHER, 0.0, 1.0);
 
-  // Swatch chroma at a borrowed lightness can leave the sRGB cube; clamp
-  // before encoding, since pow() on a negative channel yields NaN.
+  // Ordered dither: over a Bayer tile, the fraction of pixels meeting the
+  // threshold equals `probability`, so the pair blends to the source hue.
+  // Snapping the coordinate to DITHER_CHUNK-sized cells makes one threshold
+  // cover a whole block instead of a single pixel, for a chunkier dither.
+  vec2 cell = floor(gl_FragCoord.xy / DITHER_CHUNK);
+  vec3 matched = bayer8(cell) < probability ? runner_up : best;
+
+  // Every swatch is in-gamut Catppuccin, but the round-trip through the
+  // precomputed Oklab constants can still nudge a channel out of the cube;
+  // clamp before encoding, since pow() on a negative channel yields NaN.
   vec3 linear = clamp(oklab_to_linear(matched), 0.0, 1.0);
   vec3 palettized = linear_to_srgb(linear);
 
