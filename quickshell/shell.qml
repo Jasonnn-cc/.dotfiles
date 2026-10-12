@@ -31,6 +31,8 @@ Scope {
             ]
             right: [
                 TopBarSeparator {},
+                CpuWidget {},
+                TopBarSeparator {},
                 MemoryWidget {},
                 TopBarSeparator {},
                 NetworkWidget {},
