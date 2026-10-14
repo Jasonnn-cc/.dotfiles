@@ -1,0 +1,7 @@
+{
+  // Base config for markdownlint-cli2; used by nvim-lint via --config.
+  "config": {
+    // Line length is not enforced; prefer soft wrapping.
+    "MD013": false
+  }
+}
